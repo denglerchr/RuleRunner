@@ -75,9 +75,9 @@ function ruleonworker(rule, triggerchannel)
         else
             break
         end
-        take!(triggerchannel)
+        isready(triggerchannel) && take!(triggerchannel)
     end
-    take!(triggerchannel)
+    isready(triggerchannel) && take!(triggerchannel)
     println("Rule returning")
     return rule.persistent
 end
