@@ -1,5 +1,4 @@
-@everywhere push!(LOAD_PATH, pwd())
-@everywhere using RuleEngine, Dates
+@everywhere using RuleRunner, Dates
 
 @everywhere function test_rule_cb(persistent)
     persistent[1] += 1

@@ -1,0 +1,7 @@
+name = "RuleRunner"
+uuid = "1557e178-8102-4727-936a-bb898fe3ee06"
+authors = ["Christian Dengler <sumo_spider@yahoo.de>"]
+version = "0.1.0"
+
+[deps]
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"

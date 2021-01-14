@@ -1,4 +1,4 @@
-module RuleEngine
+module RuleRunner
 
 using Distributed
 
