@@ -6,6 +6,7 @@ An optionl init function can be provided that is called once at the beginning as
 can be used to, e.g., load data into the persistent variable. 
 """
 mutable struct Rule
+    name::String
     description::String
     callback::Function
     init::Union{Function, Nothing}
@@ -15,10 +16,10 @@ mutable struct Rule
     triggerchannel::RemoteChannel # push!(true) into this to start the rule, and 0 to clear it
 
     # Constructor
-    function Rule(callback::Function, interval::Number; init = nothing, persistent = 0, description::String = "No description :(")
+    function Rule(callback::Function, interval::Number; init = nothing, persistent = 0, name::String = "No name",description::String = "No description :(")
         remotechannel = RemoteChannel(()->Channel{Signal}(1), 1)
         isnothing(persistent) && (persistent = 0)
-        return new(description, callback, init, persistent, interval, nothing, remotechannel)
+        return new(name, description, callback, init, persistent, interval, nothing, remotechannel)
     end
 end
 

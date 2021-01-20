@@ -61,7 +61,7 @@ function ruleonworker(rule, triggerchannel)
         try
             rule.init(rule.persistent)
         catch e
-            @warn "Rule Init failed with error: $e; consider stopping the rule."
+            @warn "Init of $(rule.name) failed with error: $e; consider stopping the rule."
         end
     end
     # main loop
@@ -86,6 +86,6 @@ function safecallback(rule)
     try
         rule.callback(rule.persistent)
     catch e
-        @warn "Rule callback failed with error: $e; consider stopping the rule."
+        @warn "Callback of rule $(rule.name) failed with error: $e; consider stopping the rule."
     end
 end
