@@ -23,21 +23,21 @@ init(persistent) will be executed and the rule will be in pause state.
 function run(rule::Rule)
     if isrunning(rule)
         # Addition run for already scheduled rule
-        timerfunc(nothing, rule.triggerchannel)
+        timerfunc(nothing, rule)
     else
         # Run once and return
         cleanchannel!(rule.triggerchannel)
-        @spawnat :any ruleonworker(rule, rule.triggerchannel)
+        Threads.@spawn ruleonworker(rule, rule.triggerchannel)
         put!(rule.triggerchannel, RunSignal())
     end
     return rule
 end
 
-function timerfunc(timer, triggerchannel)
-    if isempty(triggerchannel)
-        put!(triggerchannel, ScheduleSignal())
+function timerfunc(timer, rule)
+    if isempty(rule.triggerchannel)
+        put!(rule.triggerchannel, ScheduleSignal())
     else
-        @warn "Previous rule execution not fínished, rule execution skipped."
+        @warn "$(rule.name): previous execution not fínished, rule execution skipped."
     end
     return nothing
 end
@@ -46,8 +46,8 @@ end
 the timer that is triggering the rule"""
 function runremote(rule)
     #remote_do(ruleonworker, ...)
-    @spawnat :any ruleonworker(rule, rule.triggerchannel)
-    timer = Timer( (timer)->timerfunc(timer, rule.triggerchannel), 0; interval = rule.interval )
+    Threads.@spawn ruleonworker(rule, rule.triggerchannel)
+    timer = Timer( (timer)->timerfunc(timer, rule), 0; interval = rule.interval )
     return timer
 end
 

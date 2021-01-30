@@ -13,13 +13,13 @@ mutable struct Rule
     persistent::Any
     interval::Number
     timer::Union{Timer, Nothing} # A timer sending a trigger signal every interval seconds
-    triggerchannel::RemoteChannel # push!(true) into this to start the rule, and 0 to clear it
+    triggerchannel::AbstractChannel # push!(true) into this to start the rule, and 0 to clear it
 
     # Constructor
     function Rule(callback::Function, interval::Number; init = nothing, persistent = 0, name::String = "No name",description::String = "No description :(")
-        remotechannel = RemoteChannel(()->Channel{Signal}(1), 1)
+        triggerchannel = Channel{Signal}(1)
         isnothing(persistent) && (persistent = 0)
-        return new(name, description, callback, init, persistent, interval, nothing, remotechannel)
+        return new(name, description, callback, init, persistent, interval, nothing, triggerchannel)
     end
 end
 

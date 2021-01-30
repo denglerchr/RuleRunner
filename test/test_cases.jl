@@ -1,6 +1,8 @@
-@everywhere using RuleRunner, Dates
+# cd("/home/christian/Dokumente/Github/RuleRunner/test")
+# push!(LOAD_PATH, "./..")
+using RuleRunner, Dates
 
-@everywhere function test_rule_cb(persistent)
+function test_rule_cb(persistent)
     persistent[1] += 1
     println(Time(now()), ": persistent = ", persistent[1])
     return nothing
