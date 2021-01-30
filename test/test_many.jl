@@ -1,7 +1,6 @@
 using RuleRunner, Dates
 
-# has its limits, e.g., 5000 is too much
-# limited by number of Timers or number of RemoteChannels?
+# try running many in parallel
 nrules = 5000
 
 rules = [Rule(x->(1+1), rand()*25+5; name = "Rule $i") for i = 1:nrules]
