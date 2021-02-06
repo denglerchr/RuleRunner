@@ -57,13 +57,8 @@ When a "false" is written in the rule.triggerchannel,
 the rule stops"""
 function ruleonworker(rule, triggerchannel)
     # init if it is a function
-    if !isnothing(rule.init)
-        try
-            rule.init(rule.persistent)
-        catch e
-            @warn "Init of $(rule.name) failed with error: $e; consider stopping the rule."
-        end
-    end
+    !isnothing(rule.init) && safeinit(rule)
+    
     # main loop
     while true
         signal = fetch(triggerchannel) # wait and get a Signal
@@ -78,14 +73,31 @@ function ruleonworker(rule, triggerchannel)
         isready(triggerchannel) && take!(triggerchannel)
     end
     isready(triggerchannel) && take!(triggerchannel)
-    println("Rule returning")
-    return rule.persistent
+    !isnothing(rule.cleanup) && safeclanup(rule)
+    return nothing
 end
+
 
 function safecallback(rule)
     try
         rule.callback(rule.persistent)
     catch e
         @warn "Callback of rule $(rule.name) failed with error: $e; consider stopping the rule."
+    end
+end
+
+function safeinit(rule)
+    try
+        rule.init(rule.persistent)
+    catch e
+        @warn "Init of rule $(rule.name) failed with error: $e."
+    end
+end
+
+function safeclanup(rule)
+    try
+        rule.cleanup(rule.persistent)
+    catch e
+        @warn "Cleanup of rule $(rule.name) failed with error: $e."
     end
 end

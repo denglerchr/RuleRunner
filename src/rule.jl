@@ -10,16 +10,17 @@ mutable struct Rule
     description::String
     callback::Function
     init::Union{Function, Nothing}
+    cleanup::Union{Function, Nothing}
     persistent::Any
     interval::Number
     timer::Union{Timer, Nothing} # A timer sending a trigger signal every interval seconds
     triggerchannel::AbstractChannel # push!(true) into this to start the rule, and 0 to clear it
 
     # Constructor
-    function Rule(callback::Function, interval::Number; init = nothing, persistent = 0, name::String = "No name",description::String = "No description :(")
+    function Rule(callback::Function, interval::Number; init = nothing, cleanup = nothing, persistent = 0, name::String = "No name", description::String = "No description :(")
         triggerchannel = Channel{Signal}(1)
         isnothing(persistent) && (persistent = 0)
-        return new(name, description, callback, init, persistent, interval, nothing, triggerchannel)
+        return new(name, description, callback, init, cleanup, persistent, interval, nothing, triggerchannel)
     end
 end
 
